@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  app_a:
+    build: ./app_a
+    container_name: app_a
+    volumes:
+      - ./app_a:/usr/src/app
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+
+  app_b:
+    build: ./app_b
+    container_name: app_b
+    volumes:
+      - ./app_b:/usr/src/app
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+
+  app_c:
+    build: ./app_c
+    container_name: app_c
+    volumes:
+      - ./app_c:/usr/src/app
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8000:80
+    depends_on:
+      - app_a
+      - app_b
+      - app_c
